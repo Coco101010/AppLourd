@@ -5,10 +5,17 @@
  */
 package IHM;
 
+
+import Entities.CAuteur;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import metier.App;
+import metier.CLivreMetier;
 
 /**
  *
@@ -16,13 +23,20 @@ import metier.App;
  */
 public class JFrameAjouter extends javax.swing.JFrame {
     
+    public CLivreMetier livreMetier;
     public App app;
+    public ArrayList<CAuteur> listeAuteurs = new ArrayList<CAuteur>();
+    public String[] idLivres;
 
     /**
      * Creates new form JFrameAjouter
      */
     public JFrameAjouter() {
         initComponents();
+        
+        String[] auteurs = this.livreMetier.RecuperereTableauDesAuteurs();
+        DefaultComboBoxModel dm = new DefaultComboBoxModel(auteurs);
+        jComboBoxAuteur.setModel(dm);
     }
 
     /**
@@ -52,9 +66,9 @@ public class JFrameAjouter extends javax.swing.JFrame {
         jTextFieldEditeur = new javax.swing.JTextField();
         jLabelEditeur = new javax.swing.JLabel();
         jLabelAuteur = new javax.swing.JLabel();
-        jTextFieldAuteur = new javax.swing.JTextField();
         jTextFieldCategories = new javax.swing.JTextField();
         jLabelCategories = new javax.swing.JLabel();
+        jComboBoxAuteur = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -98,12 +112,6 @@ public class JFrameAjouter extends javax.swing.JFrame {
 
         jLabelAuteur.setText("Auteur");
 
-        jTextFieldAuteur.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldAuteurActionPerformed(evt);
-            }
-        });
-
         jTextFieldCategories.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldCategoriesActionPerformed(evt);
@@ -112,42 +120,24 @@ public class JFrameAjouter extends javax.swing.JFrame {
 
         jLabelCategories.setText("Catégories");
 
+        jComboBoxAuteur.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxAuteur.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBoxAuteurItemStateChanged(evt);
+            }
+        });
+        jComboBoxAuteur.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxAuteurActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(134, 134, 134)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabelSynopsis, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabelNombrePages)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jSpinnerNombrePages, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabelAnneePublication)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(jLabelISBN, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(27, 27, 27)))
-                                    .addGap(18, 18, 18)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jTextFieldAnneePublication, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jTextFieldISBN, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jLabelAuteur, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
-                                    .addComponent(jLabelTitre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(44, 44, 44)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextFieldTitre)
-                                    .addComponent(jTextFieldAuteur, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(226, 226, 226)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(150, 150, 150)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -161,21 +151,50 @@ public class JFrameAjouter extends javax.swing.JFrame {
                             .addComponent(jTextFieldCategories, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
                             .addComponent(jTextFieldValide)
                             .addComponent(jTextFieldLangue)
-                            .addComponent(jTextFieldEditeur))))
-                .addContainerGap(247, Short.MAX_VALUE))
+                            .addComponent(jTextFieldEditeur)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(134, 134, 134)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabelSynopsis, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabelAnneePublication)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabelISBN, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(27, 27, 27)))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jTextFieldAnneePublication, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jTextFieldISBN, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabelAuteur, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabelNombrePages))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jSpinnerNombrePages, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabelTitre, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(44, 44, 44)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jTextFieldTitre, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
+                                    .addComponent(jComboBoxAuteur, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(226, 226, 226)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(69, 69, 69)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabelAuteur)
-                    .addComponent(jTextFieldAuteur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
+                        .addComponent(jLabelAuteur)
+                        .addGap(34, 34, 34)
                         .addComponent(jLabelTitre))
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jComboBoxAuteur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jTextFieldTitre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -232,13 +251,19 @@ public class JFrameAjouter extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldEditeurActionPerformed
 
-    private void jTextFieldAuteurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldAuteurActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldAuteurActionPerformed
-
     private void jTextFieldCategoriesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCategoriesActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldCategoriesActionPerformed
+
+    private void jComboBoxAuteurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxAuteurActionPerformed
+        // TODO add your handling code here: 
+    }//GEN-LAST:event_jComboBoxAuteurActionPerformed
+
+    private void jComboBoxAuteurItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxAuteurItemStateChanged
+        // TODO add your handling code here:
+        String genderStr = jComboBoxAuteur.getSelectedItem().toString();
+        
+    }//GEN-LAST:event_jComboBoxAuteurItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -276,6 +301,7 @@ public class JFrameAjouter extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> jComboBoxAuteur;
     private javax.swing.JLabel jLabelAnneePublication;
     private javax.swing.JLabel jLabelAuteur;
     private javax.swing.JLabel jLabelCategories;
@@ -290,7 +316,6 @@ public class JFrameAjouter extends javax.swing.JFrame {
     private javax.swing.JSpinner jSpinnerNombrePages;
     private javax.swing.JTextArea jTextAreaSynopsis;
     private javax.swing.JTextField jTextFieldAnneePublication;
-    private javax.swing.JTextField jTextFieldAuteur;
     private javax.swing.JTextField jTextFieldCategories;
     private javax.swing.JTextField jTextFieldEditeur;
     private javax.swing.JTextField jTextFieldISBN;
@@ -334,14 +359,16 @@ public class JFrameAjouter extends javax.swing.JFrame {
         return jTextFieldValide;
     }
 
-    public JTextField getjTextFieldAuteur() {
-        return jTextFieldAuteur;
-    }
 
     public JTextField getjTextFieldCategories() {
         return jTextFieldCategories;
     }
 
+    public JComboBox<String> getjComboBoxAuteur() {
+        return jComboBoxAuteur;
+    }
+    
+    
     
 
 }
