@@ -33,7 +33,7 @@ public class JFrameAjouter extends javax.swing.JFrame {
      */
     public JFrameAjouter() {
         initComponents();
-        
+        //test
         String[] auteurs = this.livreMetier.RecuperereTableauDesAuteurs();
         DefaultComboBoxModel dm = new DefaultComboBoxModel(auteurs);
         jComboBoxAuteur.setModel(dm);
